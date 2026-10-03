@@ -1,0 +1,39 @@
+# Ignorar archivos .s y .o de los tests
+tests/**/*.s
+tests/**/*.o
+tests/*.s
+tests/*.o
+test_*.s
+test_*.o
+*_test.s
+*_test.o
+
+# Binarios y ejecutables en general
+*.out
+*.bin
+*.elf
+*.exe
+*.app
+*.so
+*.so.*
+*.dylib
+*.dll
+*.a
+
+# Carpetas de artefactos y binarios de compilación
+build/
+bin/
+dist/
+
+# Binarios compilados en experiments (preservando fuentes .Zs, .s y .ld)
+experiments/**
+!experiments/**/
+!experiments/**/*.Zs
+!experiments/**/*.s
+!experiments/**/*.ld
+
+# Asegurar que no se ignoren los archivos .s del código fuente principal
+!src/**/*.s
+!src/*.s
+!runtime/**/*.s
+!runtime/*.s
