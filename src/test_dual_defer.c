@@ -53,7 +53,7 @@ static bool compile_and_run(zs_arena_t* arena, int test_id, const char* zs_path,
     char bin_path[128];
     snprintf(bin_path, sizeof(bin_path), "build/bin_test_%02d", test_id);
     char cmd[512];
-    snprintf(cmd, sizeof(cmd), "gcc -O0 -no-pie -o %s %s %s 2> build/gcc_err_%02d.log", bin_path, runner_c_path, asm_path, test_id);
+    snprintf(cmd, sizeof(cmd), "gcc -O0 -pie -o %s %s %s 2> build/gcc_err_%02d.log", bin_path, runner_c_path, asm_path, test_id);
     int res = system(cmd);
     if (res != 0) {
         fprintf(stderr, "Error al ensamblar/linkear test %02d (comando: %s)\n", test_id, cmd);

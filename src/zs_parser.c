@@ -1106,9 +1106,9 @@ zs_ast_decl_t* zs_parser_parse_decl(zs_parser_t* p) {
         return d;
     }
 
-    // foreign "C" { ... }
+    // foreign { ... } o foreign "ABI" { ... }
     if (match(p, TOK_KW_FOREIGN)) {
-        const char* abi = "C";
+        const char* abi = "native";
         if (check(p, TOK_STRING_LIT)) {
             abi = p->current.string_val.str;
             advance(p);

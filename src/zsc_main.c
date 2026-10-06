@@ -148,8 +148,10 @@ int main(int argc, char** argv) {
         fclose(f);
         printf("Ensamblador generado con éxito: %s\n", output_path);
     } else if (emit_obj) {
+        const char* tmp = getenv("TMPDIR");
+        if (!tmp || tmp[0] == '\0') tmp = "/tmp";
         char tmp_asm[256];
-        snprintf(tmp_asm, sizeof(tmp_asm), "/tmp/zsc_%d.s", getpid());
+        snprintf(tmp_asm, sizeof(tmp_asm), "%s/zsc_%d.s", tmp, getpid());
         FILE* f = fopen(tmp_asm, "w");
         if (!f) {
             fprintf(stderr, "Error al crear archivo de ensamblador temporal\n");
@@ -172,8 +174,10 @@ int main(int argc, char** argv) {
         printf("Objeto ELF generado con éxito: %s\n", output_path);
     } else {
         // Escribir ensamblador temporal y ensamblar con gcc/as
+        const char* tmp = getenv("TMPDIR");
+        if (!tmp || tmp[0] == '\0') tmp = "/tmp";
         char tmp_asm[256];
-        snprintf(tmp_asm, sizeof(tmp_asm), "/tmp/zsc_%d.s", getpid());
+        snprintf(tmp_asm, sizeof(tmp_asm), "%s/zsc_%d.s", tmp, getpid());
         FILE* f = fopen(tmp_asm, "w");
         if (!f) {
             fprintf(stderr, "Error al crear archivo de ensamblador temporal\n");
@@ -185,9 +189,9 @@ int main(int argc, char** argv) {
 
         char cmd[1024];
         if (freestanding) {
-            snprintf(cmd, sizeof(cmd), "gcc -nostdlib -no-pie -o %s %s runtime/zs_start.s runtime/zs_runtime.s", output_path, tmp_asm);
+            snprintf(cmd, sizeof(cmd), "gcc -nostdlib -pie -o %s %s runtime/zs_start.s runtime/zs_runtime.s", output_path, tmp_asm);
         } else {
-            snprintf(cmd, sizeof(cmd), "gcc -no-pie -o %s %s runtime/zs_runtime.s", output_path, tmp_asm);
+            snprintf(cmd, sizeof(cmd), "gcc -pie -o %s %s runtime/zs_runtime.s", output_path, tmp_asm);
         }
 
         int res = system(cmd);

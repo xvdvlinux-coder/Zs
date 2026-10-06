@@ -58,7 +58,7 @@ static bool run_test_51(zs_arena_t* a) {
     char bin_path[128];
     snprintf(bin_path, sizeof(bin_path), "build/bin_test_51");
     char cmd[512];
-    snprintf(cmd, sizeof(cmd), "gcc -O0 -no-pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_51.log", bin_path, runner_path, asm_path);
+    snprintf(cmd, sizeof(cmd), "gcc -O0 -pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_51.log", bin_path, runner_path, asm_path);
     if (system(cmd) != 0) return false;
 
     pid_t pid = fork();
@@ -89,7 +89,7 @@ static bool run_test_52(zs_arena_t* a) {
     char bin_path[128];
     snprintf(bin_path, sizeof(bin_path), "build/bin_test_52");
     char cmd[512];
-    snprintf(cmd, sizeof(cmd), "gcc -O0 -no-pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_52.log", bin_path, runner_path, asm_path);
+    snprintf(cmd, sizeof(cmd), "gcc -O0 -pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_52.log", bin_path, runner_path, asm_path);
     if (system(cmd) != 0) return false;
 
     // Crear tubería para simular entrada de usuario interactiva
@@ -132,7 +132,7 @@ static bool run_test_53(zs_arena_t* a) {
     char bin_path[128];
     snprintf(bin_path, sizeof(bin_path), "build/bin_test_53");
     char cmd[512];
-    snprintf(cmd, sizeof(cmd), "gcc -O0 -no-pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_53.log", bin_path, runner_path, asm_path);
+    snprintf(cmd, sizeof(cmd), "gcc -O0 -pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_53.log", bin_path, runner_path, asm_path);
     if (system(cmd) != 0) return false;
 
     pid_t pid = fork();
@@ -161,7 +161,7 @@ static bool run_test_54(zs_arena_t* a) {
     char bin_path[128];
     snprintf(bin_path, sizeof(bin_path), "build/bin_test_54");
     char cmd[512];
-    snprintf(cmd, sizeof(cmd), "gcc -O0 -no-pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_54.log", bin_path, runner_path, asm_path);
+    snprintf(cmd, sizeof(cmd), "gcc -O0 -pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_54.log", bin_path, runner_path, asm_path);
     if (system(cmd) != 0) return false;
 
     pid_t pid = fork();
@@ -183,7 +183,7 @@ static bool run_test_55(zs_arena_t* a) {
     snprintf(bin_path, sizeof(bin_path), "build/bin_test_55");
     // Enlace puramente freestanding (-nostdlib): la entrada es _start en zs_start.s
     char cmd[512];
-    snprintf(cmd, sizeof(cmd), "gcc -nostdlib -no-pie -o %s %s runtime/zs_start.s runtime/zs_runtime.s 2> build/gcc_err_55.log", bin_path, asm_path);
+    snprintf(cmd, sizeof(cmd), "gcc -nostdlib -pie -o %s %s runtime/zs_start.s runtime/zs_runtime.s 2> build/gcc_err_55.log", bin_path, asm_path);
     if (system(cmd) != 0) return false;
 
     pid_t pid = fork();
@@ -211,7 +211,7 @@ static bool run_test_56(zs_arena_t* a) {
     char bin_path[128];
     snprintf(bin_path, sizeof(bin_path), "build/bin_test_56");
     char cmd[512];
-    snprintf(cmd, sizeof(cmd), "gcc -O0 -no-pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_56.log", bin_path, runner_path, asm_path);
+    snprintf(cmd, sizeof(cmd), "gcc -O0 -pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_56.log", bin_path, runner_path, asm_path);
     if (system(cmd) != 0) return false;
 
     int pipe_out[2];
@@ -229,8 +229,11 @@ static bool run_test_56(zs_arena_t* a) {
     close(pipe_out[1]);
     char captured[32];
     memset(captured, 0, sizeof(captured));
-    ssize_t r = read(pipe_out[0], captured, sizeof(captured) - 1);
-    (void)r;
+    size_t total = 0;
+    ssize_t r;
+    while ((r = read(pipe_out[0], captured + total, sizeof(captured) - 1 - total)) > 0) {
+        total += (size_t)r;
+    }
     close(pipe_out[0]);
 
     int status = 0;
@@ -255,7 +258,7 @@ static bool run_test_57(zs_arena_t* a) {
     char bin_path[128];
     snprintf(bin_path, sizeof(bin_path), "build/bin_test_57");
     char cmd[512];
-    snprintf(cmd, sizeof(cmd), "gcc -O0 -no-pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_57.log", bin_path, runner_path, asm_path);
+    snprintf(cmd, sizeof(cmd), "gcc -O0 -pie -o %s %s %s runtime/zs_runtime.s 2> build/gcc_err_57.log", bin_path, runner_path, asm_path);
     if (system(cmd) != 0) return false;
 
     pid_t pid = fork();
